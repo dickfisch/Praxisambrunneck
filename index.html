@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Praxis am Brunneck – Hausarztpraxis Ottobrunn</title>
+  <meta name="description" content="Praxis am Brunneck – Ihre Hausarztpraxis in Ottobrunn. Dr. med. Agnes Eggerdinger & Carolin Bräuer, Fachärztinnen für Allgemeinmedizin. Alle Kassen." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===================== HERO ===================== -->
+  <div class="hero-pin">
+  <header class="hero">
+    <img class="hero__bg" src="aertze_stome_back.webp" alt="" aria-hidden="true" />
+
+    <!-- Freigestellte Ärztinnen über dem Wand-Hintergrund -->
+    <div class="hero__people">
+      <img class="hero__person hero__person--agnes" src="aertze_agnes_eggerdinger.webp" alt="Dr. med. Agnes Eggerdinger" />
+      <img class="hero__person hero__person--carolin" src="aertze_carolin_brauer.webp" alt="Carolin Bräuer" />
+    </div>
+
+    <!-- Eck-Banner -->
+    <div class="ribbon"><span>Neueröffnung</span></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+      <a class="nav__phone" href="tel:+4989605156">T. 089/60 51 56</a>
+      <a href="#sprechzeiten">Öffnungszeiten</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+
+    <!-- Ärztinnen-Labels (fliegen von der Seite ein) -->
+    <p class="doc doc--left">
+      <span class="doc__name">Dr. med. Agnes Eggerdinger</span><br />
+      <span class="doc__role">Fachärztin für Allgemeinmedizin</span>
+    </p>
+    <p class="doc doc--right">
+      <span class="doc__name">Carolin Bräuer</span><br />
+      <span class="doc__role">Fachärztin für Innere Medizin</span>
+    </p>
+
+  </header>
+  </div>
+
+  <!-- Logo: Brunnen + Schriftzug – auf Body-Ebene (fixed), damit es immer im Vordergrund liegt -->
+  <div class="hero__logo" id="heroLogo">
+    <div class="hero__brunnen">
+      <img class="brunnen-outline" src="logo_brunnen.svg" alt="" aria-hidden="true" />
+      <img class="brunnen-solid" src="logo_brunnen_solid.svg" alt="" aria-hidden="true" />
+    </div>
+    <img class="hero__wordmark" src="logo_text.svg" alt="Praxis am Brunneck – Hausarztpraxis Ottobrunn" />
+  </div>
+
+  <!-- ===================== SPRECHZEITEN ===================== -->
+  <section id="sprechzeiten" class="sprechzeiten">
+    <div class="container">
+      <div class="cards">
+        <article class="card" data-day="1">
+          <div class="card__inner">
+            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
+            <h3 class="card__day">Montag</h3>
+            <p class="card__time">08.30 – 12.30<br />15.00 – 17.30</p>
+          </div>
+        </article>
+        <article class="card" data-day="2">
+          <div class="card__inner">
+            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
+            <h3 class="card__day">Dienstag</h3>
+            <p class="card__time">08.30 – 14.30</p>
+          </div>
+        </article>
+        <article class="card" data-day="3">
+          <div class="card__inner">
+            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
+            <h3 class="card__day">Mittwoch</h3>
+            <p class="card__time">08.30 – 12.00</p>
+          </div>
+        </article>
+        <article class="card" data-day="4">
+          <div class="card__inner">
+            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
+            <h3 class="card__day">Donnerstag</h3>
+            <p class="card__time">08.30 – 12.30<br />15.00 – 17.30</p>
+          </div>
+        </article>
+        <article class="card" data-day="5">
+          <div class="card__inner">
+            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
+            <h3 class="card__day">Freitag</h3>
+            <p class="card__time">08.30 – 12.00</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="sprechzeiten__info">
+        <div class="sprechzeiten__text">
+          <p>Wir sind zu den oben stehenden Zeiten für Sie da.</p>
+          <p>Bitte vereinbaren Sie Ihren <strong>Termin telefonisch</strong>: <strong><a href="tel:+4989605156">T. 089/60 51 56</a></strong></p>
+          <p>In dringenden Fällen rufen Sie uns möglichst früh am Tag an.</p>
+        </div>
+        <p class="sprechzeiten__kassen">Alle Kassen</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HAUSARZTPRAXIS AM BRUNNECK ===================== -->
+  <section class="intro">
+    <div class="container">
+      <div class="intro__grid">
+        <h2 class="intro__title">Hausarztpraxis<br />am Brunneck</h2>
+        <p class="intro__text">Die neue Hausarztpraxis in Ottobrunn steht für eine moderne, persönliche und verlässliche medizinische Betreuung. Wir begleiten Sie mit fachlicher Sorgfalt, verständlicher Beratung und einem offenen Blick für den Menschen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== IHR WEG ZU UNS ===================== -->
+  <section class="weg">
+    <div class="container">
+     <div class="weg__grid">
+      <div class="weg__content">
+        <h2>Ihr Weg zu uns.</h2>
+        <div class="lines">
+          <span class="line">
+            <svg viewBox="0 0 33.44 38.3" fill="currentColor" aria-hidden="true"><path d="M31.57,11.05v-5.69c0-2.96-2.4-5.37-5.37-5.37H7.33C4.37,0,1.97,2.4,1.97,5.37v5.7s-.06,0-.1,0c-1.03,0-1.87.84-1.87,1.87v3.25c0,1.03.84,1.87,1.87,1.87.03,0,.06,0,.1,0v14.61h1.9v3.16c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-3.16h16.61v3.16c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-3.16h1.09v-14.6c1.03,0,1.87-.84,1.87-1.87v-3.25c0-1.03-.84-1.87-1.87-1.87ZM7.18,6.06c0-1.1.89-2,2-2h14.81c1.1,0,2,.89,2,2v1.71H7.18v-1.71ZM5.59,10.32h22.35v11.05H5.59v-11.05ZM7.88,29.37c-1.18,0-2.14-.96-2.14-2.14s.96-2.14,2.14-2.14,2.14.96,2.14,2.14-.96,2.14-2.14,2.14ZM23.15,27.24c0-1.18.96-2.14,2.14-2.14s2.14.96,2.14,2.14-.96,2.14-2.14,2.14-2.14-.96-2.14-2.14Z"/></svg>
+            212
+          </span>
+          <span class="line">
+            <svg viewBox="0 0 33.44 38.3" fill="currentColor" aria-hidden="true"><path d="M31.57,11.05v-5.69c0-2.96-2.4-5.37-5.37-5.37H7.33C4.37,0,1.97,2.4,1.97,5.37v5.7s-.06,0-.1,0c-1.03,0-1.87.84-1.87,1.87v3.25c0,1.03.84,1.87,1.87,1.87.03,0,.06,0,.1,0v14.61h1.9v3.16c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-3.16h16.61v3.16c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-3.16h1.09v-14.6c1.03,0,1.87-.84,1.87-1.87v-3.25c0-1.03-.84-1.87-1.87-1.87ZM7.18,6.06c0-1.1.89-2,2-2h14.81c1.1,0,2,.89,2,2v1.71H7.18v-1.71ZM5.59,10.32h22.35v11.05H5.59v-11.05ZM7.88,29.37c-1.18,0-2.14-.96-2.14-2.14s.96-2.14,2.14-2.14,2.14.96,2.14,2.14-.96,2.14-2.14,2.14ZM23.15,27.24c0-1.18.96-2.14,2.14-2.14s2.14.96,2.14,2.14-.96,2.14-2.14,2.14-2.14-.96-2.14-2.14Z"/></svg>
+            229
+          </span>
+          <span class="line">
+            <svg viewBox="0 0 33.44 38.3" fill="currentColor" aria-hidden="true"><path d="M31.57,11.05v-5.69c0-2.96-2.4-5.37-5.37-5.37H7.33C4.37,0,1.97,2.4,1.97,5.37v5.7s-.06,0-.1,0c-1.03,0-1.87.84-1.87,1.87v3.25c0,1.03.84,1.87,1.87,1.87.03,0,.06,0,.1,0v14.61h1.9v3.16c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-3.16h16.61v3.16c0,1.38,1.12,2.5,2.5,2.5s2.5-1.12,2.5-2.5v-3.16h1.09v-14.6c1.03,0,1.87-.84,1.87-1.87v-3.25c0-1.03-.84-1.87-1.87-1.87ZM7.18,6.06c0-1.1.89-2,2-2h14.81c1.1,0,2,.89,2,2v1.71H7.18v-1.71ZM5.59,10.32h22.35v11.05H5.59v-11.05ZM7.88,29.37c-1.18,0-2.14-.96-2.14-2.14s.96-2.14,2.14-2.14,2.14.96,2.14,2.14-.96,2.14-2.14,2.14ZM23.15,27.24c0-1.18.96-2.14,2.14-2.14s2.14.96,2.14,2.14-.96,2.14-2.14,2.14-2.14-.96-2.14-2.14Z"/></svg>
+            211V
+          </span>
+        </div>
+        <p class="weg__address">
+          <strong>Station: Ottobrunn, Erlenstr.</strong><br />
+          Praxis: Am Brunneck 10,<br />
+          ca. 2 min zu Fuß
+        </p>
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Am+Brunneck+10,+85521+Ottobrunn" target="_blank" rel="noopener">Google Maps</a>
+      </div>
+
+      <!-- Bus-Illustration: Hintergrund fix, Bus faehrt animiert durch -->
+      <div class="weg__illustration">
+        <img class="weg__bg" src="grafik_bus_back.svg" alt="Bushaltestelle Ottobrunn, Erlenstr." />
+        <img class="weg__bus" src="grafik_bus.svg" alt="" aria-hidden="true" />
+      </div>
+     </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer id="kontakt" class="footer">
+    <div class="container">
+     <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__address">
+          <p class="footer__name">Praxis am Brunneck, Hausarztpraxis Ottobrunn</p>
+          <p>
+            Am Brunneck 10<br />
+            85521 Ottobrunn
+          </p>
+          <p>
+            <a href="tel:+4989605156">T. 089/60 51 56</a><br />
+            F. 089/660 90 33 0
+          </p>
+          <p><a href="mailto:info@praxisambrunneck.de">info@praxisambrunneck.de</a></p>
+        </div>
+
+        <div class="footer__docs">
+          <div class="footer__doc">
+            <p class="footer__doc-name">Dr. med. Agnes Eggerdinger</p>
+            <p class="footer__doc-role">FÄ für Allgemeinmedizin</p>
+          </div>
+          <div class="footer__doc">
+            <p class="footer__doc-name">Carolin Bräuer</p>
+            <p class="footer__doc-role">FÄ Innere Medizin</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="footer__legal">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+      </nav>
+     </div>
+    </div>
+  </footer>
+
+  <!-- Smooth Scrolling (Lenis) -->
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+  <script>
+    (function () {
+      var heroBg = document.querySelector('.hero__bg');
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Parallax-Position setzen (wird von Lenis bzw. nativem Scroll gespeist)
+      function setParallax(scroll) {
+        if (heroBg && !reduce) {
+          heroBg.style.transform = 'translate3d(0,' + (scroll * 0.3) + 'px,0)';
+        }
+      }
+
+      // ---- Logo-Morph beim Scrollen ----
+      var logo = document.getElementById('heroLogo');
+      var brunnen = logo && logo.querySelector('.hero__brunnen');
+      var solid = logo && logo.querySelector('.brunnen-solid');
+      var outline = logo && logo.querySelector('.brunnen-outline');
+      var wordmark = logo && logo.querySelector('.hero__wordmark');
+      var STICKY_TOP = 13;   // px Abstand oben (sticky)
+      var BADGE_W = 46;      // Ziel-Breite des Brunnen-Badges
+      var THRESH = 340;      // Scrollweg bis Morph fertig
+
+      function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+      function updateLogo(scroll) {
+        if (!logo) return;
+        // mobil ueber eine viel laengere Scroll-Strecke (langsamer)
+        var threshold = (window.innerWidth <= 760) ? window.innerHeight * 0.9 : THRESH;
+        var p = Math.min(1, Math.max(0, scroll / threshold));
+        var e = easeInOut(p);
+        // Container wandert von oben (mobil tiefer) nach oben auf 13px
+        var startTop = window.innerHeight * (window.innerWidth <= 760 ? 0.4 : 0.04);
+        logo.style.top = (startTop + (STICKY_TOP - startTop) * e) + 'px';
+        // Brunnen schrumpft auf konstante Badge-Größe (viewport-unabhängig)
+        var curW = brunnen.offsetWidth || 1;
+        var finalScale = Math.min(1, BADGE_W / curW);
+        brunnen.style.transform = 'scale(' + (1 + (finalScale - 1) * e) + ')';
+        // Farb-Morph: Outline -> navy gefülltes Badge mit weißen Linien
+        var sP = Math.min(1, Math.max(0, (p - 0.4) / 0.6));
+        solid.style.opacity = sP;
+        outline.style.opacity = 1 - sP;
+        // Schriftzug: stark verkleinern, ausblenden, hinter den Brunnen
+        wordmark.style.opacity = 1 - Math.min(1, p / 0.4);
+        wordmark.style.transform = 'translateY(' + (-34 * e) + 'px) scale(' + (1 + (0.2 - 1) * e) + ')';
+      }
+
+      // ---- Namen per Scroll einblenden (NUR Mobil, waehrend der Hero gepinnt ist) ----
+      var docLeft = document.querySelector('.doc--left');
+      var docRight = document.querySelector('.doc--right');
+      function isMobile() { return window.innerWidth <= 760; }
+      function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+      function revealName(el, fromVw, start, end, p) {
+        if (!el) return;
+        var t = Math.min(1, Math.max(0, (p - start) / (end - start)));
+        var e = easeOutCubic(t);
+        el.style.opacity = e;
+        el.style.transform = 'translateX(' + (fromVw * (1 - e)) + 'vw)';
+      }
+      function updateNames(scroll) {
+        if (reduce) {
+          if (docLeft) { docLeft.style.opacity = 1; docLeft.style.transform = 'none'; }
+          if (docRight) { docRight.style.opacity = 1; docRight.style.transform = 'none'; }
+          return;
+        }
+        var PIN = window.innerHeight * 1.3;        // Pin-Scrollweg (= .hero-pin 230vh - 100vh)
+        var p = Math.min(1, Math.max(0, scroll / PIN));
+        revealName(docLeft, -75, 0.18, 0.62, p);
+        revealName(docRight, 75, 0.42, 0.88, p);
+      }
+
+      // ---- Nav oben sofort ausblenden, sobald gescrollt wird ----
+      var nav = document.querySelector('.nav');
+      function updateNav(scroll) {
+        if (!nav) return;
+        if (!isMobile()) {  // Desktop: Nav bleibt unveraendert
+          nav.style.opacity = '';
+          nav.style.transform = '';
+          nav.style.pointerEvents = '';
+          return;
+        }
+        var t = Math.min(1, scroll / 90);
+        nav.style.opacity = (1 - t);
+        nav.style.transform = 'translateY(' + (-26 * t) + 'px)';
+        nav.style.pointerEvents = t > 0.5 ? 'none' : '';
+      }
+
+      function onScroll(scroll) {
+        updateNav(scroll);
+        if (isMobile()) {
+          if (heroBg) heroBg.style.transform = 'none';  // Bild bleibt stehen (sticky)
+          updateNames(scroll);
+        } else {
+          setParallax(scroll);
+        }
+        updateLogo(scroll);
+      }
+
+      if (!reduce && window.Lenis) {
+        var lenis = new Lenis({
+          duration: 1.1,
+          easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+          smoothWheel: true
+        });
+
+        lenis.on('scroll', function (e) { onScroll(e.scroll); });
+
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Anker-Links sanft scrollen
+        document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            var target = link.getAttribute('href');
+            if (target.length <= 1) return;
+            e.preventDefault();
+
+            // Sprechzeiten: zur visuellen Oberkante der (hochgezogenen) Karten scrollen
+            if (target === '#sprechzeiten') {
+              var cards = document.querySelectorAll('.card');
+              if (cards.length) {
+                var minTop = Infinity;
+                cards.forEach(function (c) {
+                  minTop = Math.min(minTop, c.getBoundingClientRect().top);
+                });
+                var y = (window.scrollY || window.pageYOffset || 0) + minTop - 120;
+                lenis.scrollTo(y, { offset: 0 });
+                return;
+              }
+            }
+            lenis.scrollTo(target, { offset: 0 });
+          });
+        });
+      } else {
+        // Fallback: nativer Scroll + Parallax
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+          if (!ticking) {
+            window.requestAnimationFrame(function () {
+              onScroll(window.scrollY || window.pageYOffset || 0);
+              ticking = false;
+            });
+            ticking = true;
+          }
+        }, { passive: true });
+      }
+
+      onScroll(window.scrollY || window.pageYOffset || 0);
+      window.addEventListener('resize', function () {
+        onScroll(window.scrollY || window.pageYOffset || 0);
+      });
+
+      // ---- Aktuellen Wochentag markieren (Mo=1 ... Fr=5; Sa/So nichts) ----
+      var dow = new Date().getDay();
+      if (dow >= 1 && dow <= 5) {
+        var todayCard = document.querySelector('.card[data-day="' + dow + '"]');
+        if (todayCard) todayCard.classList.add('is-today');
+      }
+
+      // ---- Kalenderblatt-Flattern: einmaliges, gedaempftes Ausschwingen ----
+      if (!reduce) {
+        document.querySelectorAll('.card').forEach(function (card) {
+          card.addEventListener('mouseenter', function () {
+            card.classList.remove('sway');
+            void card.offsetWidth; // Reflow erzwingen -> Animation startet neu
+            card.classList.add('sway');
+          });
+          card.addEventListener('animationend', function () {
+            card.classList.remove('sway');
+          });
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
