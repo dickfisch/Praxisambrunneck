@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Praxis am Brunneck – Hausarztpraxis Ottobrunn</title>
   <meta name="description" content="Praxis am Brunneck – Ihre Hausarztpraxis in Ottobrunn. Dr. med. Agnes Eggerdinger & Carolin Bräuer, Fachärztinnen für Allgemeinmedizin. Alle Kassen." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -15,16 +12,13 @@
   <!-- ===================== HERO ===================== -->
   <div class="hero-pin">
   <header class="hero">
-    <img class="hero__bg" src="aertze_stome_back.webp" alt="" aria-hidden="true" />
+    <img class="hero__bg" src="assets/img/aertze_stome_back.webp" alt="" aria-hidden="true" />
 
     <!-- Freigestellte Ärztinnen über dem Wand-Hintergrund -->
     <div class="hero__people">
-      <img class="hero__person hero__person--agnes" src="aertze_agnes_eggerdinger.webp" alt="Dr. med. Agnes Eggerdinger" />
-      <img class="hero__person hero__person--carolin" src="aertze_carolin_brauer.webp" alt="Carolin Bräuer" />
+      <img class="hero__person hero__person--agnes" src="assets/img/aertze_agnes_eggerdinger.webp" alt="Dr. med. Agnes Eggerdinger" />
+      <img class="hero__person hero__person--carolin" src="assets/img/aertze_carolin_brauer.webp" alt="Carolin Bräuer" />
     </div>
-
-    <!-- Eck-Banner -->
-    <div class="ribbon"><span>Neueröffnung</span></div>
 
     <!-- Navigation -->
     <nav class="nav">
@@ -35,10 +29,12 @@
 
     <!-- Ärztinnen-Labels (fliegen von der Seite ein) -->
     <p class="doc doc--left">
+      <button class="docinfo-toggle" type="button" data-docinfo="agnes" aria-label="Mehr über Dr. med. Agnes Eggerdinger"></button>
       <span class="doc__name">Dr. med. Agnes Eggerdinger</span><br />
       <span class="doc__role">Fachärztin für Allgemeinmedizin</span>
     </p>
     <p class="doc doc--right">
+      <button class="docinfo-toggle" type="button" data-docinfo="carolin" aria-label="Mehr über Carolin Bräuer"></button>
       <span class="doc__name">Carolin Bräuer</span><br />
       <span class="doc__role">Fachärztin für Innere Medizin</span>
     </p>
@@ -49,10 +45,86 @@
   <!-- Logo: Brunnen + Schriftzug – auf Body-Ebene (fixed), damit es immer im Vordergrund liegt -->
   <div class="hero__logo" id="heroLogo">
     <div class="hero__brunnen">
-      <img class="brunnen-outline" src="logo_brunnen.svg" alt="" aria-hidden="true" />
-      <img class="brunnen-solid" src="logo_brunnen_solid.svg" alt="" aria-hidden="true" />
+      <img class="brunnen-outline" src="assets/img/logo_brunnen.svg" alt="" aria-hidden="true" />
+      <img class="brunnen-solid" src="assets/img/logo_brunnen_solid.svg" alt="" aria-hidden="true" />
     </div>
-    <img class="hero__wordmark" src="logo_text.svg" alt="Praxis am Brunneck – Hausarztpraxis Ottobrunn" />
+    <img class="hero__wordmark" src="assets/img/logo_text.svg" alt="Praxis am Brunneck – Hausarztpraxis Ottobrunn" />
+  </div>
+
+  <!-- Bio-Panel: Agnes -->
+  <div class="docinfo" id="docinfo-agnes" aria-hidden="true">
+    <div class="docinfo__backdrop" data-close></div>
+    <div class="docinfo__panel" role="dialog" aria-modal="true" aria-label="Über Dr. med. Agnes Eggerdinger" data-lenis-prevent>
+      <button class="docinfo__close" type="button" data-close aria-label="Schließen">&times;</button>
+      <div class="docinfo__inner">
+        <img class="docinfo__logo" src="assets/img/logo_brunnen.svg" alt="" aria-hidden="true" />
+        <h3>Dr. med. Agnes Eggerdinger</h3>
+        <p class="docinfo__sub">Fachärztin für Allgemeinmedizin</p>
+        <p class="docinfo__intro"><strong>Schwerpunkte:</strong> hausärztliche Versorgung von Familien und Kindern, ambulante chirurgische Wundversorgung</p>
+        <div class="bio">
+          <div class="bio__item">
+            <p class="bio__year">2009–2016</p>
+            <p class="bio__text">Studium der Humanmedizin, Technische Universität München</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2012–2021</p>
+            <p class="bio__text">Promotion an der Chirurgischen Klinik, Klinikum rechts der Isar, München</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2016–2021</p>
+            <p class="bio__text">Facharztweiterbildung Chirurgie, RoMed Klinikum Wasserburg</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2021–2023</p>
+            <p class="bio__text">Facharztweiterbildung Innere Medizin, Kreisklinik Ebersberg</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2023–2026</p>
+            <p class="bio__text">Facharztweiterbildung ambulante Versorgung (Hausarztmedizin / Kinderheilkunde)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bio-Panel: Carolin -->
+  <div class="docinfo" id="docinfo-carolin" aria-hidden="true">
+    <div class="docinfo__backdrop" data-close></div>
+    <div class="docinfo__panel" role="dialog" aria-modal="true" aria-label="Über Carolin Bräuer" data-lenis-prevent>
+      <button class="docinfo__close" type="button" data-close aria-label="Schließen">&times;</button>
+      <div class="docinfo__inner">
+        <img class="docinfo__logo" src="assets/img/logo_brunnen.svg" alt="" aria-hidden="true" />
+        <h3>Carolin Bräuer</h3>
+        <p class="docinfo__sub">Fachärztin für Innere Medizin</p>
+        <p class="docinfo__intro"><strong>Schwerpunkte:</strong> internistische Diagnostik, Herz-Kreislauf-Erkrankungen, Ernährungsmedizin</p>
+        <div class="bio">
+          <div class="bio__item">
+            <p class="bio__year">2003–2010</p>
+            <p class="bio__text">Studium der Humanmedizin, Fakultät Carl Gustav Carus, TU Dresden</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2010–2014</p>
+            <p class="bio__text">Katharinenhospital Stuttgart – Weiterbildung in Gastroenterologie, Pneumologie und Nephrologie; interdisziplinäre Notaufnahme und internistische Intensivmedizin</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2015–2019</p>
+            <p class="bio__text">Klinikum Harlaching München, Kardiologie</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2017</p>
+            <p class="bio__text">Facharztprüfung Innere Medizin</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">2019–2026</p>
+            <p class="bio__text">angestellte Ärztin in internistischen Hausarztpraxen</p>
+          </div>
+          <div class="bio__item">
+            <p class="bio__year">seit 2025</p>
+            <p class="bio__text">Zusatzweiterbildung Ernährungsmedizin</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===================== SPRECHZEITEN ===================== -->
@@ -98,9 +170,8 @@
 
       <div class="sprechzeiten__info">
         <div class="sprechzeiten__text">
-          <p>Wir sind zu den oben stehenden Zeiten für Sie da.</p>
           <p>Bitte vereinbaren Sie Ihren <strong>Termin telefonisch</strong>: <strong><a href="tel:+4989605156">T. 089/60 51 56</a></strong></p>
-          <p>In dringenden Fällen rufen Sie uns möglichst früh am Tag an.</p>
+          <p>Notfallsprechstunde täglich von 8.30–09.30</p>
         </div>
         <p class="sprechzeiten__kassen">Alle Kassen</p>
       </div>
@@ -113,6 +184,97 @@
       <div class="intro__grid">
         <h2 class="intro__title">Hausarztpraxis<br />am Brunneck</h2>
         <p class="intro__text">Die neue Hausarztpraxis in Ottobrunn steht für eine moderne, persönliche und verlässliche medizinische Betreuung. Wir begleiten Sie mit fachlicher Sorgfalt, verständlicher Beratung und einem offenen Blick für den Menschen.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== LEISTUNGSSPEKTRUM ===================== -->
+  <section class="leistungen">
+    <div class="container">
+      <div class="leistungen__grid">
+        <h2 class="leistungen__title">Leistungsspektrum</h2>
+
+        <div class="accordion">
+          <div class="acc-item">
+            <button class="acc-head" type="button" aria-expanded="false">
+              <span class="acc-title">Allgemeinmedizinische Versorgung</span>
+              <span class="acc-icon" aria-hidden="true"></span>
+            </button>
+            <div class="acc-panel"><div class="acc-panel-inner">
+              <ul>
+                <li>Hausärztliche Versorgung</li>
+                <li>Hausbesuche und Pflegeheimbetreuung</li>
+                <li>Psychosomatische Grundversorgung</li>
+                <li>Impfberatung und Impfung nach aktuellen Empfehlungen der STIKO</li>
+                <li>OP-Vorbereitungsuntersuchung</li>
+                <li>Chirurgische Versorgung von Schnittwunden/Platzwunden</li>
+                <li>Desensibilisierung (nach vorheriger Austestung und Therapieeinleitung durch den Allergologen)</li>
+                <li>Betreuung im Rahmen von Disease Management Programmen (Diabetes mellitus II, KHK, COPD, Asthma)</li>
+                <li>Kur-, Reha- und Rentenanträge</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="acc-item">
+            <button class="acc-head" type="button" aria-expanded="false">
+              <span class="acc-title">Vorsorgeuntersuchungen</span>
+              <span class="acc-icon" aria-hidden="true"></span>
+            </button>
+            <div class="acc-panel"><div class="acc-panel-inner">
+              <ul>
+                <li>Gesundheits-Check-Up / Kassen-Check</li>
+                <li>Hautkrebsscreening</li>
+                <li>Beratung und Stuhltest (iFOBT) zur Darmkrebsvorsorge</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="acc-item">
+            <button class="acc-head" type="button" aria-expanded="false">
+              <span class="acc-title">Diagnostik</span>
+              <span class="acc-icon" aria-hidden="true"></span>
+            </button>
+            <div class="acc-panel"><div class="acc-panel-inner">
+              <ul>
+                <li>Labordiagnostik für Blut, Urin und Abstriche</li>
+                <li>Ultraschalluntersuchungen der Bauchorgane und Schilddrüse</li>
+                <li>Ruhe-EKG</li>
+                <li>Lungenfunktionsprüfung</li>
+                <li>Langzeit-Blutdruckmessung</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="acc-item">
+            <button class="acc-head" type="button" aria-expanded="false">
+              <span class="acc-title">Gesundheitsuntersuchungen</span>
+              <span class="acc-icon" aria-hidden="true"></span>
+            </button>
+            <div class="acc-panel"><div class="acc-panel-inner">
+              <ul>
+                <li>Belehrungen gemäß dem Infektionsschutzgesetz</li>
+                <li>Jugendschutzuntersuchungen</li>
+                <li>Untersuchungen im Rahmen von Versicherungsanfragen</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="acc-item">
+            <button class="acc-head" type="button" aria-expanded="false">
+              <span class="acc-title">Individuelle Gesundheitsleistungen</span>
+              <span class="acc-icon" aria-hidden="true"></span>
+            </button>
+            <div class="acc-panel"><div class="acc-panel-inner">
+              <ul>
+                <li>Atteste und Gutachten</li>
+                <li>PSA-Test zur Früherkennung von Prostatakrebs</li>
+                <li>Individuelle Laboruntersuchungen nach Rücksprache</li>
+                <li>Erweiterung des Kassen-Checks nach Rücksprache</li>
+                <li>Zusätzlicher Gesundheitscheck innerhalb der 3 Jahre nach Kassen-Check</li>
+              </ul>
+            </div></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -147,8 +309,8 @@
 
       <!-- Bus-Illustration: Hintergrund fix, Bus faehrt animiert durch -->
       <div class="weg__illustration">
-        <img class="weg__bg" src="grafik_bus_back.svg" alt="Bushaltestelle Ottobrunn, Erlenstr." />
-        <img class="weg__bus" src="grafik_bus.svg" alt="" aria-hidden="true" />
+        <img class="weg__bg" src="assets/img/grafik_bus_back.svg" alt="Bushaltestelle Ottobrunn, Erlenstr." />
+        <img class="weg__bus" src="assets/img/grafik_bus.svg" alt="" aria-hidden="true" />
       </div>
      </div>
     </div>
@@ -185,15 +347,15 @@
       </div>
 
       <nav class="footer__legal">
-        <a href="#">Impressum</a>
+        <a href="impressum.html">Impressum</a>
         <a href="#">Datenschutz</a>
       </nav>
      </div>
     </div>
   </footer>
 
-  <!-- Smooth Scrolling (Lenis) -->
-  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+  <!-- Smooth Scrolling (Lenis) – lokal -->
+  <script src="assets/lenis.min.js"></script>
   <script>
     (function () {
       var heroBg = document.querySelector('.hero__bg');
@@ -368,6 +530,35 @@
           });
         });
       }
+
+      // ---- Akkordeon (Leistungsspektrum) ----
+      document.querySelectorAll('.acc-head').forEach(function (head) {
+        head.addEventListener('click', function () {
+          var item = head.closest('.acc-item');
+          var open = item.classList.toggle('open');
+          head.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      });
+
+      // ---- Ärztinnen-Bio-Panels ----
+      function openDoc(m) { if (!m) return; m.classList.add('open'); m.setAttribute('aria-hidden', 'false'); if (lenis) lenis.stop(); }
+      function closeDoc(m) { m.classList.remove('open'); m.setAttribute('aria-hidden', 'true'); if (lenis) lenis.start(); }
+      document.querySelectorAll('.docinfo-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          openDoc(document.getElementById('docinfo-' + btn.getAttribute('data-docinfo')));
+        });
+      });
+      document.querySelectorAll('.docinfo').forEach(function (m) {
+        m.querySelectorAll('[data-close]').forEach(function (el) {
+          el.addEventListener('click', function () { closeDoc(m); });
+        });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.docinfo.open').forEach(closeDoc);
+        }
+      });
     })();
   </script>
 

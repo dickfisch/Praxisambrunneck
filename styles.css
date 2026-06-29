@@ -9,36 +9,27 @@
   --shadow: 0 18px 40px rgba(16, 40, 68, 0.14);
   /* Container skaliert mit und greift erst auf sehr breiten/4K-Displays */
   --container: clamp(1400px, 84vw, 2700px);
-  /* Schrift: lizenzierte Corporate-DIN 2014 zuerst, Inter als freier Fallback */
-  --font: "DIN 2014", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Schrift: Inter (lokal self-gehostet) */
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Karten-Überlapp übers Bild – skaliert proportional mit */
   --cards-pull: clamp(150px, 9.5vw, 280px);
   /* gemeinsame Breite von Kartenreihe + Infotext darunter */
   --cards-width: clamp(1040px, 70vw, 2700px);
 }
 
-/* ===================== DIN 2014 WEBFONT =====================
-   Lege die lizenzierten DIN-2014-Dateien unter assets/fonts/ ab,
-   dann wird automatisch DIN 2014 genutzt – sonst greift Inter. */
+/* ===================== INTER (lokal, Variable) =====================
+   Selbst gehostet -> keine externen Requests (DSGVO), offline-fähig. */
 @font-face {
-  font-family: "DIN 2014";
-  src: url("assets/fonts/DIN2014-Regular.woff2") format("woff2");
-  font-weight: 400; font-style: normal; font-display: swap;
+  font-family: "Inter";
+  src: url("assets/fonts/inter-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 @font-face {
-  font-family: "DIN 2014";
-  src: url("assets/fonts/DIN2014-Demi.woff2") format("woff2");
-  font-weight: 600; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "DIN 2014";
-  src: url("assets/fonts/DIN2014-Bold.woff2") format("woff2");
-  font-weight: 700; font-style: normal; font-display: swap;
-}
-@font-face {
-  font-family: "DIN 2014";
-  src: url("assets/fonts/DIN2014-ExtraBold.woff2") format("woff2");
-  font-weight: 800; font-style: normal; font-display: swap;
+  font-family: "Inter";
+  src: url("assets/fonts/inter-latin-ext-wght-normal.woff2") format("woff2");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;
 }
 
 * { box-sizing: border-box; }
@@ -55,6 +46,8 @@ html {
   /* fluide Basisgröße: skaliert sanft mit – auf 4K größer, ohne Sprünge */
   font-size: clamp(18px, 0.55vw + 9px, 26px);
   overflow-x: clip;
+  /* reserviert den Scrollbalken-Platz dauerhaft -> kein Springen beim Modal-Öffnen */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -126,33 +119,6 @@ a { color: inherit; text-decoration: none; }
 .hero__person--carolin { height: 104.9vh; }
 /* negativer Versatz, da die freigestellten Bilder zur Mitte transparenten Rand haben */
 .hero__person--carolin { margin-left: clamp(-40px, -2vw, -14px); }
-
-/* Eck-Banner "Neueröffnung" */
-.ribbon {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 230px;
-  height: 230px;
-  overflow: hidden;
-  z-index: 90;
-  pointer-events: none;
-}
-.ribbon span {
-  position: absolute;
-  top: 52px;
-  left: -58px;
-  width: 260px;
-  transform: rotate(-45deg);
-  background: var(--navy);
-  color: #fff;
-  text-align: center;
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  padding: 10px 0;
-  box-shadow: 0 6px 16px rgba(16, 40, 68, 0.25);
-}
 
 /* Navigation */
 .nav {
@@ -245,6 +211,147 @@ a { color: inherit; text-decoration: none; }
 @keyframes docInRight {
   from { opacity: 0; transform: translateX(60vw); }
   to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---- Info-Button (Liquid Glass, pulsierend) oben-links am Namen ---- */
+.docinfo-toggle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-135%, -85%);
+  z-index: 6;
+  width: 2.6em;
+  height: 2.6em;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.16);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  backdrop-filter: blur(10px) saturate(150%);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  animation: docPulse 2.4s ease-out infinite;
+}
+.docinfo-toggle::before,
+.docinfo-toggle::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 2px;
+}
+.docinfo-toggle::before { width: 42%; height: 2px; }
+.docinfo-toggle::after  { width: 2px; height: 42%; }
+@keyframes docPulse {
+  0%   { box-shadow: inset 0 1px 1px rgba(255,255,255,0.6), 0 0 0 0 rgba(255,255,255,0.5); }
+  70%  { box-shadow: inset 0 1px 1px rgba(255,255,255,0.6), 0 0 0 15px rgba(255,255,255,0); }
+  100% { box-shadow: inset 0 1px 1px rgba(255,255,255,0.6), 0 0 0 0 rgba(255,255,255,0); }
+}
+@media (prefers-reduced-motion: reduce) { .docinfo-toggle { animation: none; } }
+
+/* ---- Bio-Modal (zentrierte Karte je Ärztin) ---- */
+.docinfo {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 48px);
+  pointer-events: none;
+}
+.docinfo.open { pointer-events: auto; }
+.docinfo__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 40, 68, 0.42);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.docinfo.open .docinfo__backdrop { opacity: 1; }
+.docinfo__panel {
+  position: relative;
+  /* skaliert proportional mit (wie der Rest der Seite) */
+  width: min(94vw, clamp(560px, 44vw, 1200px));
+  max-height: 86vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 30px 80px rgba(16, 40, 68, 0.32);
+  /* Query-Container -> Innenleben skaliert in cqw mit der Box-Breite */
+  container-type: inline-size;
+  opacity: 0;
+  transform: translateY(28px) scale(0.98);
+  transition: opacity 0.35s ease, transform 0.42s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.docinfo.open .docinfo__panel { opacity: 1; transform: none; }
+.docinfo__inner { padding: clamp(28px, 6.5cqw, 96px) clamp(26px, 7cqw, 100px); }
+.docinfo__logo {
+  display: block;
+  width: clamp(44px, 10cqw, 112px);
+  height: auto;
+  margin: 0 auto clamp(13px, 2.8cqw, 42px);
+}
+.docinfo__close {
+  position: absolute;
+  top: clamp(12px, 1.4vw, 26px);
+  right: clamp(14px, 1.6vw, 30px);
+  width: 1.5em;
+  height: 1.5em;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: clamp(1.5rem, 1.9vw, 2.8rem);
+  line-height: 1;
+  color: var(--navy);
+  transition: opacity 0.2s ease;
+  z-index: 2;
+}
+.docinfo__close:hover { opacity: 0.6; }
+.docinfo h3 {
+  margin: 0 0 0.25em;
+  font-size: clamp(1.35rem, 4.6cqw, 3.4rem);
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+}
+.docinfo__sub {
+  margin: 0 0 clamp(18px, 3.4cqw, 54px);
+  text-align: center;
+  color: var(--muted);
+  font-size: clamp(1rem, 2.6cqw, 2rem);
+}
+/* Einleitungssatz über dem Werdegang */
+.docinfo__intro {
+  margin: 0 0 clamp(14px, 2cqw, 30px);
+  color: var(--ink);
+  font-size: clamp(0.98rem, 2.5cqw, 1.95rem);
+  line-height: 1.55;
+}
+.docinfo__intro strong { color: var(--navy); font-weight: 700; }
+
+/* Werdegang: dünne Linien statt Aufzählungspunkten; Jahr fett links, Text in gleicher Zeile rechts */
+.bio__item {
+  display: grid;
+  grid-template-columns: 6em 1fr;
+  gap: clamp(8px, 1.2cqw, 22px);
+  align-items: baseline;
+  padding: clamp(10px, 1.5cqw, 22px) 0;
+  font-size: clamp(0.98rem, 2.5cqw, 1.95rem);   /* steuert die em-Spaltenbreite */
+}
+.bio__item + .bio__item { border-top: 1px solid rgba(22, 53, 91, 0.14); }
+.bio__year {
+  margin: 0;
+  font-weight: 700;
+  color: var(--navy);
+}
+.bio__text {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(0.95rem, 2.35cqw, 1.85rem);
+  line-height: 1.5;
 }
 
 /* ===================== SPRECHZEITEN ===================== */
@@ -394,7 +501,7 @@ a { color: inherit; text-decoration: none; }
   display: grid;
   grid-template-columns: 0.9fr 1.1fr;
   gap: clamp(40px, 6cqw, 180px);
-  align-items: center;
+  align-items: start;
 }
 .intro__title {
   margin: 0;
@@ -410,6 +517,82 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.5;
   color: var(--navy);
 }
+
+/* ===================== LEISTUNGSSPEKTRUM ===================== */
+.leistungen { padding: clamp(40px, 4vw, 130px) 0; }
+.leistungen__grid {
+  width: var(--cards-width);
+  margin: 0 auto;
+  container-type: inline-size;
+}
+.leistungen__title {
+  margin: 0 0 clamp(16px, 2cqw, 44px);
+  font-size: clamp(20px, 2.15cqw, 42px);   /* wie "IHR WEG ZU UNS." */
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.accordion { border-top: 1px solid rgba(22, 53, 91, 0.18); }
+.acc-item { border-bottom: 1px solid rgba(22, 53, 91, 0.18); }
+.acc-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 2cqw, 48px);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: clamp(1.2rem, 1.9cqw, 3rem);   /* wie Intro-Fließtext */
+  font-weight: 600;
+  line-height: 1.3;
+  padding: clamp(16px, 1.9cqw, 44px) 0;
+}
+/* Plus-Icon rechts */
+.acc-icon {
+  position: relative;
+  flex: none;
+  width: 0.72em;
+  height: 0.72em;
+}
+.acc-icon::before,
+.acc-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--navy);
+}
+.acc-icon::before { width: 100%; height: 2px; transform: translate(-50%, -50%); }
+.acc-icon::after {
+  width: 2px;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease;
+}
+.acc-item.open .acc-icon::after { transform: translate(-50%, -50%) scaleY(0); }
+
+/* aufklappbarer Inhalt (sanfte Höhen-Animation) */
+.acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s ease;
+}
+.acc-panel-inner { overflow: hidden; }
+.acc-item.open .acc-panel { grid-template-rows: 1fr; }
+.acc-panel ul {
+  margin: 0;
+  padding: 0 0 clamp(18px, 2cqw, 48px) 1.25em;
+  color: var(--ink);
+  font-size: clamp(1rem, 1.45cqw, 2.2rem);
+  line-height: 1.6;
+}
+.acc-panel li { margin: 0 0 0.4em; }
 
 /* ===================== IHR WEG ZU UNS ===================== */
 .weg { padding: clamp(35px, 3vw, 100px) 0 clamp(22px, 2vw, 65px); }
@@ -557,7 +740,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 1180px) {
-  .sprechzeiten, .intro, .weg, .footer { --cards-width: min(92vw, 820px); }
+  .sprechzeiten, .intro, .leistungen, .weg, .footer { --cards-width: min(92vw, 820px); }
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     --cards-pull: clamp(80px, 9vw, 130px);
@@ -581,8 +764,10 @@ a { color: inherit; text-decoration: none; }
     opacity: 0;
     font-size: 1rem;
   }
-  .doc--left  { left: 7%;  right: auto; top: 54%; transform: translateX(-75vw); }
-  .doc--right { right: 7%; left: auto;  top: 67%; transform: translateX(75vw); }
+  .doc--left  { left: 7%;  right: auto; top: 52%; transform: translateX(-75vw); }
+  .doc--right { right: 7%; left: auto;  top: 71%; transform: translateX(75vw); }
+  /* Plus nicht über den linken Rand abschneiden -> mehr nach oben statt weit links */
+  .docinfo-toggle { transform: translate(-18%, -115%); }
 
   /* Frauen enger zusammen + Mobil-Größe beibehalten */
   .hero__person--agnes   { height: 92vh; }
@@ -591,7 +776,7 @@ a { color: inherit; text-decoration: none; }
   .brunnen-outline,
   .hero__wordmark { filter: brightness(0) invert(1); }
   /* passt in den Container -> symmetrische Raender links/rechts */
-  .sprechzeiten, .intro, .weg, .footer { --cards-width: min(100%, 420px); }
+  .sprechzeiten, .intro, .leistungen, .weg, .footer { --cards-width: min(100%, 420px); }
   .intro__grid { grid-template-columns: 1fr; gap: 22px; }
   .cards {
     grid-template-columns: minmax(0, 1fr);
@@ -613,8 +798,96 @@ a { color: inherit; text-decoration: none; }
     width: 100%;
     margin-top: 40px;
   }
-  /* Banner unten rechts (mobil) – groß genug, dass "Neueröffnung" lesbar ist */
-  .ribbon { top: auto; left: auto; bottom: 0; right: 0; width: 170px; height: 170px; }
-  .ribbon span { top: auto; left: auto; bottom: 40px; right: -44px; width: 195px; font-size: 0.82rem; padding: 7px 0; }
   .footer__docs { text-align: left; }
 }
+
+/* ===================== LEGAL (Impressum / Datenschutz) ===================== */
+.legal-header {
+  display: flex;
+  justify-content: center;
+  padding: 4vh 32px clamp(20px, 3vw, 40px);
+}
+/* gleiches gesplittetes Logo wie auf der Startseite (Brunnen 37% über Wortmarke) */
+.legal-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  width: clamp(216px, 16.8vw, 432px);
+  max-width: 48vw;
+}
+.legal-logo__icon { width: 37%; height: auto; display: block; }
+.legal-logo__word { width: 100%; height: auto; display: block; }
+
+.legal {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: clamp(20px, 4vw, 48px) 32px clamp(60px, 8vw, 120px);
+  color: var(--ink);
+  font-family: var(--font);   /* gleicher Font wie die ganze Seite (Inter/DIN) */
+  line-height: 1.65;
+}
+.legal h1, .legal h3, .legal p, .legal span, .legal a, .legal li, .legal__kicker, .legal__label {
+  font-family: var(--font);
+}
+.legal__kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.legal h1 {
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin: 0 0 clamp(28px, 3vw, 48px);
+  line-height: 1.1;
+}
+.legal__card {
+  background: #f6f8f9;
+  border: 1px solid #e4e8eb;
+  border-radius: 12px;
+  padding: clamp(20px, 2.5vw, 30px) clamp(22px, 2.8vw, 34px);
+  margin: 0 0 clamp(34px, 4vw, 52px);
+}
+.legal__name { font-weight: 700; color: var(--navy); margin: 0 0 2px; }
+.legal__sub { color: var(--muted); margin: 0 0 14px; }
+.legal__card p { margin: 0; }
+.legal__contact { margin-top: 14px; display: grid; gap: 3px; }
+
+.legal section { margin: 0 0 clamp(26px, 3vw, 38px); }
+.legal__label {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--navy);           /* dunkel wie das "HEUTE"-Label auf der Startseite */
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e4e8eb;
+}
+.legal p { margin: 0 0 10px; }
+.legal p:last-child { margin-bottom: 0; }
+.legal__strong { font-weight: 600; }
+.legal ul { margin: 4px 0 0; padding-left: 20px; }
+.legal li { margin: 0 0 5px; }
+.legal a {
+  color: var(--navy);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(22, 53, 91, 0.35);
+  transition: border-color 0.15s ease;
+}
+.legal a:hover { border-bottom-color: var(--navy); }
+
+.legal-back {
+  display: inline-block;
+  margin-top: clamp(20px, 3vw, 40px);
+  color: var(--navy);
+  font-weight: 600;
+  border: 0;
+}
+.legal-back:hover { opacity: 0.65; }
