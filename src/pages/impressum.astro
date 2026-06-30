@@ -122,8 +122,8 @@
   </main>
 
   <!-- Smooth Scrolling (Lenis) – lokal -->
-  <script src="assets/lenis.min.js"></script>
-  <script>
+  <script is:inline src="assets/lenis.min.js"></script>
+  <script is:inline>
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.Lenis) return;
       var lenis = new Lenis({ duration: 1.1, smoothWheel: true });

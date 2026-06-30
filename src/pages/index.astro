@@ -1,3 +1,8 @@
+---
+// Inhalte werden beim Build eingebaut (später von der Praxis via TinaCloud pflegbar)
+import sprechzeiten from '../../content/sprechzeiten.json';
+import hinweis from '../../content/hinweis.json';
+---
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -9,16 +14,18 @@
 </head>
 <body>
 
-  <!-- ===================== HINWEIS-BANNER (aus assets/data/hinweis.json) ===================== -->
-  <section class="hinweis" id="hinweis" hidden role="region" aria-label="Aktueller Hinweis">
-    <div class="hinweis__inner">
-      <span class="hinweis__label">Hinweis</span>
-      <p class="hinweis__content">
-        <strong class="hinweis__titel"></strong>
-        <span class="hinweis__text"></span>
-      </p>
-    </div>
-  </section>
+  <!-- ===================== HINWEIS-BANNER (aus content/hinweis.json, via TinaCloud pflegbar) ===================== -->
+  {hinweis.aktiv && (hinweis.titel || hinweis.text) && (
+    <section class="hinweis" id="hinweis" role="region" aria-label="Aktueller Hinweis">
+      <div class="hinweis__inner">
+        <span class="hinweis__label">Hinweis</span>
+        <p class="hinweis__content">
+          {hinweis.titel && <strong class="hinweis__titel">{hinweis.titel}</strong>}
+          <span class="hinweis__text">{hinweis.text}</span>
+        </p>
+      </div>
+    </section>
+  )}
 
   <!-- ===================== HERO ===================== -->
   <div class="hero-pin">
@@ -142,41 +149,15 @@
   <section id="sprechzeiten" class="sprechzeiten">
     <div class="container">
       <div class="cards">
-        <article class="card" data-day="1">
-          <div class="card__inner">
-            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
-            <h3 class="card__day">Montag</h3>
-            <p class="card__time">08.30 – 12.30<br />15.00 – 17.30</p>
-          </div>
-        </article>
-        <article class="card" data-day="2">
-          <div class="card__inner">
-            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
-            <h3 class="card__day">Dienstag</h3>
-            <p class="card__time">08.30 – 14.30</p>
-          </div>
-        </article>
-        <article class="card" data-day="3">
-          <div class="card__inner">
-            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
-            <h3 class="card__day">Mittwoch</h3>
-            <p class="card__time">08.30 – 12.00</p>
-          </div>
-        </article>
-        <article class="card" data-day="4">
-          <div class="card__inner">
-            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
-            <h3 class="card__day">Donnerstag</h3>
-            <p class="card__time">08.30 – 12.30<br />15.00 – 17.30</p>
-          </div>
-        </article>
-        <article class="card" data-day="5">
-          <div class="card__inner">
-            <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
-            <h3 class="card__day">Freitag</h3>
-            <p class="card__time">08.30 – 12.00</p>
-          </div>
-        </article>
+        {sprechzeiten.tage.map((d) => (
+          <article class="card" data-day={d.datum}>
+            <div class="card__inner">
+              <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
+              <h3 class="card__day">{d.tag}</h3>
+              <p class="card__time">{d.zeiten.map((z, i) => (<Fragment>{i > 0 && <br />}{z}</Fragment>))}</p>
+            </div>
+          </article>
+        ))}
       </div>
 
       <div class="sprechzeiten__info">
@@ -366,8 +347,8 @@
   </footer>
 
   <!-- Smooth Scrolling (Lenis) – lokal -->
-  <script src="assets/lenis.min.js"></script>
-  <script>
+  <script is:inline src="assets/lenis.min.js"></script>
+  <script is:inline>
     (function () {
       var heroBg = document.querySelector('.hero__bg');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -537,52 +518,14 @@
       }
       applyToday();   // sofort auf die statischen Karten (Fallback, falls JSON nicht lädt)
 
-      // ---- Inhalte aus JSON laden (vom Kunden via CMS pflegbar) ----
-      function escapeHtml(s) {
-        return String(s).replace(/[&<>"]/g, function (c) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-        });
-      }
-      function currentScroll() { return window.__lenis ? window.__lenis.scroll : (window.scrollY || window.pageYOffset || 0); }
-
-      // Sprechzeiten: Karten neu aufbauen, wenn assets/data/sprechzeiten.json vorhanden ist
-      fetch('assets/data/sprechzeiten.json', { cache: 'no-cache' })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (data) {
-          if (!data || !Array.isArray(data.tage)) return;
-          var wrap = document.querySelector('.sprechzeiten .cards');
-          if (!wrap) return;
-          wrap.innerHTML = data.tage.map(function (d) {
-            var times = (d.zeiten || []).map(escapeHtml).join('<br />');
-            return '<article class="card" data-day="' + (d.datum || '') + '">'
-              + '<div class="card__inner">'
-              + '<span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>'
-              + '<h3 class="card__day">' + escapeHtml(d.tag || '') + '</h3>'
-              + '<p class="card__time">' + times + '</p>'
-              + '</div></article>';
-          }).join('');
-          applyToday();
-        })
-        .catch(function () {});
-
-      // Hinweis-Banner: erscheint nur, wenn aktiv:true in assets/data/hinweis.json
-      fetch('assets/data/hinweis.json', { cache: 'no-cache' })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) {
-          var el = document.getElementById('hinweis');
-          if (!el) return;
-          var hasContent = d && d.aktiv && (d.titel || d.text);
-          if (!hasContent) { el.hidden = true; hinweisH = 0; onScroll(currentScroll()); return; }
-          var tEl = el.querySelector('.hinweis__titel');
-          var bEl = el.querySelector('.hinweis__text');
-          tEl.textContent = d.titel || '';
-          tEl.style.display = d.titel ? '' : 'none';
-          bEl.textContent = d.text || '';
-          el.hidden = false;
-          hinweisH = el.offsetHeight;
-          onScroll(currentScroll());
-        })
-        .catch(function () {});
+      // ---- Hinweis-Banner: Höhe messen, falls aktiv (Inhalt wird beim Build serverseitig gesetzt) ----
+      (function () {
+        var hb = document.getElementById('hinweis');
+        if (hb && !hb.hidden) {
+          hinweisH = hb.offsetHeight;
+          onScroll(window.__lenis ? window.__lenis.scroll : (window.scrollY || window.pageYOffset || 0));
+        }
+      })();
 
       // ---- Kalenderblatt-Flattern: einmaliges, gedaempftes Ausschwingen ----
       if (!reduce) {
