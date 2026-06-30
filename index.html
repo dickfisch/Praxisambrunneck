@@ -348,7 +348,7 @@
 
       <nav class="footer__legal">
         <a href="impressum.html">Impressum</a>
-        <a href="#">Datenschutz</a>
+        <a href="datenschutz.html">Datenschutz</a>
       </nav>
      </div>
     </div>
@@ -459,6 +459,7 @@
           easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
           smoothWheel: true
         });
+        window.__lenis = lenis;   // für Gestensteuerung erreichbar
 
         lenis.on('scroll', function (e) { onScroll(e.scroll); });
 
@@ -561,6 +562,296 @@
       });
     })();
   </script>
+
+  <!-- =====================================================================
+       VORÜBERGEHEND DEAKTIVIERT: Gesten- & Sprachsteuerung.
+       Zum Wiederaktivieren diesen Kommentaranfang (oben) UND das Kommentarende
+       weiter unten (Markierung "ENDE DEAKTIVIERT", direkt vor </body>) entfernen.
+       Solange auskommentiert: Schalter unsichtbar, Scripts laufen nicht,
+       es werden keine externen Ressourcen geladen.
+       =====================================================================
+
+  === GESTENSTEUERUNG (opt-in) ===
+  <button id="gestureToggle" class="gesture-toggle" type="button" aria-pressed="false" aria-label="Gestensteuerung an/aus">
+    <span class="gesture-dot"></span>
+    <span class="gesture-label">Gestensteuerung</span>
+  </button>
+  <div id="gesturePreview" class="gesture-preview" aria-hidden="true">
+    <video id="gestureVideo" playsinline muted></video>
+  </div>
+  <div id="gestureCursor" class="gesture-cursor" aria-hidden="true"></div>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById('gestureToggle');
+      var cursor = document.getElementById('gestureCursor');
+      var video = document.getElementById('gestureVideo');
+      var preview = document.getElementById('gesturePreview');
+      var label = toggle && toggle.querySelector('.gesture-label');
+      if (!toggle) return;
+
+      var running = false, loading = false, stream = null, landmarker = null, rafId = null;
+      var cx = window.innerWidth / 2, cy = window.innerHeight / 2, pinching = false;
+      var lastClickAt = 0;        // Cooldown gegen Doppel-/Mehrfachklicks
+      var CLICK_COOLDOWN = 650;   // ms Mindestabstand zwischen zwei Klicks
+      var PINCH_ENTER = 0.40;     // Hysterese: zugehen muss enger sein …
+      var PINCH_EXIT  = 0.58;     // … als loslassen (kein Flackern an einer Schwelle)
+      var prevY = null, vy = 0;   // für Wisch-Scroll
+
+      function setLabel(t) { if (label) label.textContent = t; }
+      function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+      function dist(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+
+      async function loadLandmarker() {
+        var v = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18/vision_bundle.mjs');
+        var resolver = await v.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18/wasm');
+        var opts = {
+          baseOptions: {
+            modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task',
+            delegate: 'GPU'
+          },
+          numHands: 1,
+          runningMode: 'VIDEO'
+        };
+        try {
+          landmarker = await v.HandLandmarker.createFromOptions(resolver, opts);
+        } catch (e) {
+          opts.baseOptions.delegate = 'CPU';
+          landmarker = await v.HandLandmarker.createFromOptions(resolver, opts);
+        }
+      }
+
+      async function start() {
+        if (loading || running) return;
+        loading = true;
+        setLabel('Lädt …');
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+          video.srcObject = stream;
+          await video.play();
+          if (!landmarker) await loadLandmarker();
+          running = true;
+          prevY = null;
+          toggle.setAttribute('aria-pressed', 'true');
+          setLabel('Gestensteuerung an');
+          cursor.classList.add('active');
+          preview.classList.add('active');
+          loop();
+        } catch (e) {
+          setLabel('Kamera nicht möglich');
+          cleanup();
+          setTimeout(function () { setLabel('Gestensteuerung'); }, 2500);
+        } finally {
+          loading = false;
+        }
+      }
+
+      function cleanup() {
+        running = false;
+        if (rafId) cancelAnimationFrame(rafId);
+        if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
+        if (video) video.srcObject = null;
+        toggle.setAttribute('aria-pressed', 'false');
+        cursor.classList.remove('active', 'pinch');
+        preview.classList.remove('active');
+      }
+      function stop() { cleanup(); setLabel('Gestensteuerung'); }
+
+      function doScroll(delta) {
+        if (window.__lenis) { window.__lenis.scrollTo(window.__lenis.scroll + delta, { duration: 0.25 }); }
+        else { window.scrollBy(0, delta); }
+      }
+
+      function loop() {
+        if (!running) return;
+        rafId = requestAnimationFrame(loop);
+        if (video.readyState < 2) return;
+        var res;
+        try { res = landmarker.detectForVideo(video, performance.now()); } catch (e) { return; }
+        if (!res || !res.landmarks || !res.landmarks.length) return;
+
+        var lm = res.landmarks[0];
+        var idx = lm[8], thumb = lm[4], wrist = lm[0], midMcp = lm[9];
+
+        // Finger eingeklappt? (Spitze näher am Handgelenk als das Mittelgelenk)
+        function curledF(tip, pip) { return dist(lm[tip], wrist) < dist(lm[pip], wrist); }
+        var idxCurled = curledF(8, 6);
+        var curledCount = (idxCurled ? 1 : 0)
+          + (curledF(12, 10) ? 1 : 0)
+          + (curledF(16, 14) ? 1 : 0)
+          + (curledF(20, 18) ? 1 : 0);
+
+        // Cursor folgt dem Zeigefinger (x gespiegelt)
+        var tx = (1 - idx.x) * window.innerWidth;
+        var ty = idx.y * window.innerHeight;
+        cx += (tx - cx) * 0.28;
+        cy += (ty - cy) * 0.28;
+        cursor.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
+
+        // Pinch (Daumen + Zeigefinger, Zeigefinger gestreckt) -> Klick
+        // Hysterese: zum Auslösen muss der Abstand unter PINCH_ENTER, zum
+        // Lösen wieder über PINCH_EXIT — so flackert es nicht an einer Schwelle.
+        var handSize = dist(wrist, midMcp) || 0.001;
+        var ratio = dist(thumb, idx) / handSize;
+        var isPinch = pinching ? (ratio < PINCH_EXIT) : (ratio < PINCH_ENTER && !idxCurled);
+        if (isPinch && !pinching) {
+          pinching = true;
+          cursor.classList.add('pinch');
+          var now = performance.now();
+          if (now - lastClickAt >= CLICK_COOLDOWN) {   // Cooldown: nicht mehrfach feuern
+            lastClickAt = now;
+            var el = document.elementFromPoint(clamp(cx, 0, window.innerWidth - 1), clamp(cy, 0, window.innerHeight - 1));
+            if (el) {
+              // target="_blank"-Links im selben Tab öffnen (programmat. Klick wird sonst als Popup geblockt)
+              var a = el.closest ? el.closest('a[href]') : null;
+              if (a && (a.target === '_blank' || a.getAttribute('target') === '_blank')) {
+                window.location.href = a.href;
+              } else if (typeof el.click === 'function') {
+                el.click();
+              }
+            }
+          }
+        } else if (!isPinch && pinching) {
+          pinching = false;
+          cursor.classList.remove('pinch');
+        }
+
+        // Scrollen über Handpose:
+        //  - Faust (alle Finger eingeklappt)              -> runter
+        //  - offene Hand SEITLICH (Knöchel schmal/gestapelt) -> hoch
+        //  - offene Hand HANDFLÄCHE zur Kamera (Knöchel breit) -> Stopp
+        if (!isPinch) {
+          var speed = window.innerHeight * 0.018;
+          if (curledCount >= 4) {
+            doScroll(speed);                                 // Faust -> runter
+          } else if (curledCount <= 1) {
+            var spread = dist(lm[5], lm[17]) / handSize;     // Knöchelbreite (Zeige..klein)
+            if (spread < 0.45) doScroll(-speed);             // seitlich -> hoch; sonst (Handfläche) Stopp
+          }
+        }
+      }
+
+      toggle.addEventListener('click', function () {
+        if (running || loading) stop(); else start();
+      });
+    })();
+  </script>
+
+  === SPRACHSTEUERUNG (opt-in) ===
+  <button id="voiceToggle" class="gesture-toggle voice-toggle" type="button" aria-pressed="false" aria-label="Sprachsteuerung an/aus">
+    <span class="gesture-dot"></span>
+    <span class="voice-label">Sprachsteuerung</span>
+  </button>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('voiceToggle');
+      var label = btn && btn.querySelector('.voice-label');
+      var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!btn) return;
+      if (!SR) { btn.addEventListener('click', function () { setL('Browser nicht unterstützt'); }); return; }
+
+      var rec = null, on = false, revertT = null;
+      function setL(t) { if (label) label.textContent = t; }
+      function L() { return window.__lenis; }
+
+      function vScroll(frac) {
+        var d = frac * window.innerHeight;
+        if (L()) L().scrollTo(L().scroll + d, { duration: 0.8 });
+        else window.scrollBy({ top: d, behavior: 'smooth' });
+      }
+      function vTop() { if (L()) L().scrollTo(0, { duration: 0.9 }); else window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      function vToSel(sel, off) {
+        var el = document.querySelector(sel); if (!el) return;
+        if (L()) L().scrollTo(el, { offset: off || 0, duration: 0.9 });
+        else window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top + (off || 0), behavior: 'smooth' });
+      }
+      function clickSel(sel) { var el = document.querySelector(sel); if (el) el.click(); }
+      function openAcc(keyword) {
+        var heads = document.querySelectorAll('.acc-head');
+        for (var i = 0; i < heads.length; i++) {
+          var title = heads[i].querySelector('.acc-title');
+          if (title && title.textContent.toLowerCase().indexOf(keyword) !== -1) {
+            var item = heads[i].closest('.acc-item');
+            if (item && !item.classList.contains('open')) heads[i].click();
+            if (L()) L().scrollTo(heads[i], { offset: -140, duration: 0.9 });
+            else heads[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+          }
+        }
+      }
+      function closeModals() { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })); }
+      function openMaps() { var m = document.querySelector('a[href*="google.com/maps"]'); if (m) window.location.href = m.href; }
+
+      // Reihenfolge wichtig: spezifischere Begriffe zuerst
+      // gelockerte Wortstämme, da der Recognizer Komposita oft trennt
+      var commands = [
+        { k: ['ganz nach oben', 'seitenanfang', 'startseite', 'zum anfang'], run: vTop },
+        { k: ['nach unten', 'runter', 'tiefer', 'abwärts'], run: function () { vScroll(0.85); } },
+        { k: ['nach oben', 'rauf', 'aufwärts', 'weiter oben'], run: function () { vScroll(-0.85); } },
+        { k: ['öffnungszeit', 'oeffnungszeit', 'sprechzeit', 'sprechstunde'], run: function () { vToSel('#sprechzeiten', -160); } },
+        { k: ['allgemein', 'hausärzt', 'hausarzt'], run: function () { openAcc('allgemein'); } },
+        { k: ['vorsorge'], run: function () { openAcc('vorsorge'); } },
+        { k: ['diagnos'], run: function () { openAcc('diagnostik'); } },
+        { k: ['gesundheitsunters', 'gesundheits unters', 'gesundheitsuntersuchung'], run: function () { openAcc('gesundheitsuntersuchung'); } },
+        { k: ['individuell', 'gesundheitsleistung', 'igel'], run: function () { openAcc('individuelle'); } },
+        { k: ['leistung', 'leistungsspektrum'], run: function () { vToSel('.leistungen', -40); } },
+        { k: ['anfahrt', 'weg zu uns', 'adresse', 'wegbeschreibung'], run: function () { vToSel('.weg', -40); } },
+        { k: ['kontakt', 'footer'], run: function () { vToSel('#kontakt', -40); } },
+        { k: ['impressum'], run: function () { window.location.href = 'impressum.html'; } },
+        { k: ['agnes', 'eggerdinger'], run: function () { clickSel('.docinfo-toggle[data-docinfo="agnes"]'); } },
+        { k: ['carolin', 'bräuer', 'braeuer', 'breuer'], run: function () { clickSel('.docinfo-toggle[data-docinfo="carolin"]'); } },
+        { k: ['schließen', 'schliessen', 'zumachen', 'zurück'], run: closeModals },
+        { k: ['google maps', 'maps', 'route', 'karte'], run: openMaps },
+        { k: ['anrufen', 'telefon', 'termin'], run: function () { window.location.href = 'tel:+4989605156'; } }
+      ];
+
+      function handle(transcript) {
+        var t = transcript.toLowerCase();
+        for (var i = 0; i < commands.length; i++) {
+          for (var j = 0; j < commands[i].k.length; j++) {
+            if (t.indexOf(commands[i].k[j]) !== -1) { commands[i].run(); return; }
+          }
+        }
+      }
+
+      function startVoice() {
+        rec = new SR();
+        rec.lang = 'de-DE';
+        rec.continuous = true;
+        rec.interimResults = true;   // Live-Feedback, was gehört wird
+        rec.onresult = function (e) {
+          var r = e.results[e.results.length - 1];
+          if (!r) return;
+          var t = (r[0].transcript || '').trim();
+          if (t) setL('„' + t + '“');       // anzeigen, was erkannt wurde
+          if (r.isFinal) {
+            handle(t);
+            clearTimeout(revertT);
+            revertT = setTimeout(function () { if (on) setL('Sprachsteuerung an'); }, 1600);
+          }
+        };
+        rec.onerror = function (e) {
+          if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+            setL('Mikro nicht erlaubt'); stopVoice();
+            setTimeout(function () { setL('Sprachsteuerung'); }, 2500);
+          }
+        };
+        rec.onend = function () { if (on) { try { rec.start(); } catch (e) {} } };
+        try { rec.start(); on = true; btn.setAttribute('aria-pressed', 'true'); setL('Sprachsteuerung an'); }
+        catch (e) { setL('Sprachsteuerung'); on = false; }
+      }
+      function stopVoice() {
+        on = false;
+        if (rec) { try { rec.stop(); } catch (e) {} rec = null; }
+        btn.setAttribute('aria-pressed', 'false'); setL('Sprachsteuerung');
+      }
+
+      btn.addEventListener('click', function () { if (on) stopVoice(); else startVoice(); });
+    })();
+  </script>
+  === ENDE DEAKTIVIERT ===
+  -->
 
 </body>
 </html>
