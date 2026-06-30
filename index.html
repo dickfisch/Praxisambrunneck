@@ -9,6 +9,17 @@
 </head>
 <body>
 
+  <!-- ===================== HINWEIS-BANNER (aus assets/data/hinweis.json) ===================== -->
+  <section class="hinweis" id="hinweis" hidden role="region" aria-label="Aktueller Hinweis">
+    <div class="hinweis__inner">
+      <span class="hinweis__label">Hinweis</span>
+      <p class="hinweis__content">
+        <strong class="hinweis__titel"></strong>
+        <span class="hinweis__text"></span>
+      </p>
+    </div>
+  </section>
+
   <!-- ===================== HERO ===================== -->
   <div class="hero-pin">
   <header class="hero">
@@ -360,6 +371,7 @@
     (function () {
       var heroBg = document.querySelector('.hero__bg');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var hinweisH = 0;   // Höhe des aktiven Hinweis-Banners (0 = aus); hält das fixed-Logo darunter
 
       // Parallax-Position setzen (wird von Lenis bzw. nativem Scroll gespeist)
       function setParallax(scroll) {
@@ -388,7 +400,8 @@
         var e = easeInOut(p);
         // Container wandert von oben (mobil tiefer) nach oben auf 13px
         var startTop = window.innerHeight * (window.innerWidth <= 760 ? 0.4 : 0.04);
-        logo.style.top = (startTop + (STICKY_TOP - startTop) * e) + 'px';
+        var bannerVisible = Math.max(0, hinweisH - scroll);   // Logo unter dem Hinweis-Banner halten, bis es weggescrollt ist
+        logo.style.top = (startTop + bannerVisible + (STICKY_TOP - startTop) * e) + 'px';
         // Brunnen schrumpft auf konstante Badge-Größe (viewport-unabhängig)
         var curW = brunnen.offsetWidth || 1;
         var finalScale = Math.min(1, BADGE_W / curW);
@@ -508,15 +521,68 @@
 
       onScroll(window.scrollY || window.pageYOffset || 0);
       window.addEventListener('resize', function () {
+        var hb = document.getElementById('hinweis');
+        hinweisH = (hb && !hb.hidden) ? hb.offsetHeight : 0;
         onScroll(window.scrollY || window.pageYOffset || 0);
       });
 
       // ---- Aktuellen Wochentag markieren (Mo=1 ... Fr=5; Sa/So nichts) ----
-      var dow = new Date().getDay();
-      if (dow >= 1 && dow <= 5) {
-        var todayCard = document.querySelector('.card[data-day="' + dow + '"]');
-        if (todayCard) todayCard.classList.add('is-today');
+      function applyToday() {
+        document.querySelectorAll('.card.is-today').forEach(function (c) { c.classList.remove('is-today'); });
+        var dow = new Date().getDay();
+        if (dow >= 1 && dow <= 5) {
+          var todayCard = document.querySelector('.card[data-day="' + dow + '"]');
+          if (todayCard) todayCard.classList.add('is-today');
+        }
       }
+      applyToday();   // sofort auf die statischen Karten (Fallback, falls JSON nicht lädt)
+
+      // ---- Inhalte aus JSON laden (vom Kunden via CMS pflegbar) ----
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+      function currentScroll() { return window.__lenis ? window.__lenis.scroll : (window.scrollY || window.pageYOffset || 0); }
+
+      // Sprechzeiten: Karten neu aufbauen, wenn assets/data/sprechzeiten.json vorhanden ist
+      fetch('assets/data/sprechzeiten.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (data) {
+          if (!data || !Array.isArray(data.tage)) return;
+          var wrap = document.querySelector('.sprechzeiten .cards');
+          if (!wrap) return;
+          wrap.innerHTML = data.tage.map(function (d) {
+            var times = (d.zeiten || []).map(escapeHtml).join('<br />');
+            return '<article class="card" data-day="' + (d.datum || '') + '">'
+              + '<div class="card__inner">'
+              + '<span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>'
+              + '<h3 class="card__day">' + escapeHtml(d.tag || '') + '</h3>'
+              + '<p class="card__time">' + times + '</p>'
+              + '</div></article>';
+          }).join('');
+          applyToday();
+        })
+        .catch(function () {});
+
+      // Hinweis-Banner: erscheint nur, wenn aktiv:true in assets/data/hinweis.json
+      fetch('assets/data/hinweis.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          var el = document.getElementById('hinweis');
+          if (!el) return;
+          var hasContent = d && d.aktiv && (d.titel || d.text);
+          if (!hasContent) { el.hidden = true; hinweisH = 0; onScroll(currentScroll()); return; }
+          var tEl = el.querySelector('.hinweis__titel');
+          var bEl = el.querySelector('.hinweis__text');
+          tEl.textContent = d.titel || '';
+          tEl.style.display = d.titel ? '' : 'none';
+          bEl.textContent = d.text || '';
+          el.hidden = false;
+          hinweisH = el.offsetHeight;
+          onScroll(currentScroll());
+        })
+        .catch(function () {});
 
       // ---- Kalenderblatt-Flattern: einmaliges, gedaempftes Ausschwingen ----
       if (!reduce) {
