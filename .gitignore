@@ -10,3 +10,8 @@ alte bilder/
 node_modules/
 dist/
 .astro/
+
+# TinaCMS (Build-Artefakte werden bei jedem Deploy neu erzeugt)
+public/admin/
+tina/__generated__/
+.env
