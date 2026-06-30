@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
-  "buildCommand": "tinacms build && astro build",
+  "buildCommand": "tinacms build --skip-cloud-checks && astro build",
   "outputDirectory": "dist"
 }

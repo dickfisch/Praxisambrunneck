@@ -68,12 +68,18 @@ export default defineConfig({
         match: { include: "hinweis" },
         ui: { allowedActions: { create: false, delete: false } },
         fields: [
-          { type: "boolean", name: "aktiv", label: "Banner anzeigen" },
+          {
+            type: "boolean",
+            name: "aktiv",
+            label: "Banner anzeigen",
+            description: "An = Hinweis erscheint oben auf der Startseite. Aus = ausgeblendet.",
+          },
           { type: "string", name: "titel", label: "Titel (fett)" },
           {
             type: "string",
             name: "text",
             label: "Text",
+            description: "Der Hinweistext, z. B. Urlaub oder Vertretung.",
             ui: { component: "textarea" },
           },
         ],
