@@ -46,11 +46,6 @@ export default defineConfig({
             fields: [
               { type: "string", name: "tag", label: "Wochentag (Anzeige)" },
               {
-                type: "number",
-                name: "datum",
-                label: "Tag-Nummer (1 = Montag … 5 = Freitag)",
-              },
-              {
                 type: "string",
                 name: "zeiten",
                 label: "Sprechzeiten (eine Zeile pro Zeitspanne)",
@@ -74,6 +69,13 @@ export default defineConfig({
             label: "Banner anzeigen",
             description: "An = Hinweis erscheint oben auf der Startseite. Aus = ausgeblendet.",
           },
+          {
+            type: "string",
+            name: "label",
+            label: "Label (kleiner Text oben)",
+            description:
+              "Das kleine Wort ganz oben im Banner, z. B. „Hinweis“, „Achtung“, „Wichtig“. Leer lassen = „Hinweis“.",
+          },
           { type: "string", name: "titel", label: "Titel (fett)" },
           {
             type: "string",
@@ -83,25 +85,25 @@ export default defineConfig({
             ui: { component: "textarea" },
           },
           {
+            type: "image",
+            name: "datei",
+            label: "Datei (PDF/Bild) zum Anzeigen",
+            description:
+              "Datei hochladen. Wird als eigenes Element mit Dateiname (bei Bildern mit Vorschau) angezeigt. Klick öffnet/lädt sie herunter.",
+          },
+          {
             type: "string",
             name: "buttonText",
             label: "Button-Beschriftung",
             description:
-              "Text auf dem Button, z. B. „Vertretungsplan (PDF)“. Leer lassen = kein Button.",
-          },
-          {
-            type: "image",
-            name: "datei",
-            label: "PDF / Datei zum Download",
-            description:
-              "Datei hochladen (z. B. PDF). Der Button verlinkt automatisch darauf.",
+              "Text auf dem Button, z. B. „Mehr erfahren“. Nur zusammen mit „Externer Link“. Leer lassen = kein Button.",
           },
           {
             type: "string",
             name: "link",
-            label: "Externer Link (statt Datei)",
+            label: "Externer Link (für den Button)",
             description:
-              "Alternativ eine Web-Adresse (https://…). Wird nur genutzt, wenn oben KEINE Datei gewählt ist.",
+              "Web-Adresse (https://…), auf die der Button zeigt. Unabhängig von der Datei – beides ist gleichzeitig möglich.",
           },
         ],
       },

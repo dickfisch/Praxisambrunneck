@@ -3,10 +3,18 @@
 import sprechzeiten from '../../content/sprechzeiten.json';
 import hinweis from '../../content/hinweis.json';
 
-// Button im Hinweis-Banner: Datei hat Vorrang vor Link.
-const hinweisHref = (hinweis as any).datei || (hinweis as any).link || '';
-const hinweisIstDatei = !!(hinweis as any).datei;
-const hinweisButton = (hinweis as any).buttonText;
+// Hinweis-Banner: Datei (eigenes Element) und Button (externer Link) sind unabhängig.
+const hinweisDatei = (hinweis as any).datei || '';
+const hinweisDateiName = hinweisDatei ? decodeURIComponent(hinweisDatei.split('/').pop()) : '';
+const hinweisDateiIstBild = /\.(png|jpe?g|gif|webp|svg|avif)$/i.test(hinweisDatei);
+const hinweisButton = (hinweis as any).buttonText || '';
+const hinweisLink = (hinweis as any).link || '';
+const hinweisLabel = (hinweis as any).label || 'Hinweis';
+
+// Wochentag-Nummer (wie JS getDay(): So=0 … Sa=6) automatisch aus dem Namen ableiten.
+// Die ersten zwei Buchstaben sind im Deutschen eindeutig: Mo Di Mi Do Fr Sa So.
+const TAG_ZU_NR: Record<string, number> = { mo: 1, di: 2, mi: 3, do: 4, fr: 5, sa: 6, so: 0 };
+const tagNummer = (name: string) => TAG_ZU_NR[(name || '').trim().toLowerCase().slice(0, 2)] ?? '';
 ---
 <!DOCTYPE html>
 <html lang="de">
@@ -20,18 +28,25 @@ const hinweisButton = (hinweis as any).buttonText;
 <body>
 
   <!-- ===================== HINWEIS-BANNER (aus content/hinweis.json, via TinaCloud pflegbar) ===================== -->
-  {hinweis.aktiv && (hinweis.titel || hinweis.text || (hinweisButton && hinweisHref)) && (
+  {hinweis.aktiv && (hinweis.titel || hinweis.text || hinweisDatei || (hinweisButton && hinweisLink)) && (
     <section class="hinweis" id="hinweis" role="region" aria-label="Aktueller Hinweis">
       <div class="hinweis__inner">
-        <span class="hinweis__label">Hinweis</span>
-        <p class="hinweis__content">
-          {hinweis.titel && <strong class="hinweis__titel">{hinweis.titel}</strong>}
-          <span class="hinweis__text">{hinweis.text}</span>
-        </p>
-        {hinweisButton && hinweisHref && (
-          hinweisIstDatei
-            ? <a class="hinweis__btn" href={hinweisHref} download>{hinweisButton}</a>
-            : <a class="hinweis__btn" href={hinweisHref} target="_blank" rel="noopener">{hinweisButton}</a>
+        <span class="hinweis__label">{hinweisLabel}</span>
+        {hinweis.titel && <strong class="hinweis__titel">{hinweis.titel}</strong>}
+        {hinweis.text && <p class="hinweis__text">{hinweis.text}</p>}
+        {hinweisDatei && (
+          <a class="hinweis__datei" href={hinweisDatei} target="_blank" rel="noopener">
+            {hinweisDateiIstBild
+              ? <img class="hinweis__datei-thumb" src={hinweisDatei} alt={hinweisDateiName} />
+              : <span class="hinweis__datei-icon" aria-hidden="true">📄</span>}
+            <span class="hinweis__datei-info">
+              <span class="hinweis__datei-name">{hinweisDateiName}</span>
+              <span class="hinweis__datei-hint">Öffnen / Herunterladen</span>
+            </span>
+          </a>
+        )}
+        {hinweisButton && hinweisLink && (
+          <a class="hinweis__btn" href={hinweisLink} target="_blank" rel="noopener">{hinweisButton}</a>
         )}
       </div>
     </section>
@@ -160,7 +175,7 @@ const hinweisButton = (hinweis as any).buttonText;
     <div class="container">
       <div class="cards">
         {sprechzeiten.tage.map((d) => (
-          <article class="card" data-day={d.datum}>
+          <article class="card" data-day={tagNummer(d.tag)}>
             <div class="card__inner">
               <span class="card__eyebrow"><span class="card__label">Sprechzeiten</span><span class="card__today">Heute</span></span>
               <h3 class="card__day">{d.tag}</h3>

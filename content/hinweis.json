@@ -1,5 +1,9 @@
 {
   "aktiv": false,
-  "titel": "Test",
-  "text": "test"
+  "label": "",
+  "titel": "",
+  "text": "",
+  "datei": "",
+  "buttonText": "",
+  "link": ""
 }
