@@ -5,6 +5,9 @@
 # nicht ins Repo:
 alte bilder/
 *.pdf
+# ...ABER: über Tina hochgeladene PDFs (Medienordner) müssen ins Repo:
+!public/assets/img/*.pdf
+!public/assets/img/**/*.pdf
 
 # Astro / Node
 node_modules/

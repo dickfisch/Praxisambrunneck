@@ -82,6 +82,27 @@ export default defineConfig({
             description: "Der Hinweistext, z. B. Urlaub oder Vertretung.",
             ui: { component: "textarea" },
           },
+          {
+            type: "string",
+            name: "buttonText",
+            label: "Button-Beschriftung",
+            description:
+              "Text auf dem Button, z. B. „Vertretungsplan (PDF)“. Leer lassen = kein Button.",
+          },
+          {
+            type: "image",
+            name: "datei",
+            label: "PDF / Datei zum Download",
+            description:
+              "Datei hochladen (z. B. PDF). Der Button verlinkt automatisch darauf.",
+          },
+          {
+            type: "string",
+            name: "link",
+            label: "Externer Link (statt Datei)",
+            description:
+              "Alternativ eine Web-Adresse (https://…). Wird nur genutzt, wenn oben KEINE Datei gewählt ist.",
+          },
         ],
       },
     ],
