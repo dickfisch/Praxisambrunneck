@@ -2,6 +2,11 @@
 // Inhalte werden beim Build eingebaut (später von der Praxis via TinaCloud pflegbar)
 import sprechzeiten from '../../content/sprechzeiten.json';
 import hinweis from '../../content/hinweis.json';
+
+// Button im Hinweis-Banner: Datei hat Vorrang vor Link.
+const hinweisHref = (hinweis as any).datei || (hinweis as any).link || '';
+const hinweisIstDatei = !!(hinweis as any).datei;
+const hinweisButton = (hinweis as any).buttonText;
 ---
 <!DOCTYPE html>
 <html lang="de">
@@ -15,7 +20,7 @@ import hinweis from '../../content/hinweis.json';
 <body>
 
   <!-- ===================== HINWEIS-BANNER (aus content/hinweis.json, via TinaCloud pflegbar) ===================== -->
-  {hinweis.aktiv && (hinweis.titel || hinweis.text) && (
+  {hinweis.aktiv && (hinweis.titel || hinweis.text || (hinweisButton && hinweisHref)) && (
     <section class="hinweis" id="hinweis" role="region" aria-label="Aktueller Hinweis">
       <div class="hinweis__inner">
         <span class="hinweis__label">Hinweis</span>
@@ -23,6 +28,11 @@ import hinweis from '../../content/hinweis.json';
           {hinweis.titel && <strong class="hinweis__titel">{hinweis.titel}</strong>}
           <span class="hinweis__text">{hinweis.text}</span>
         </p>
+        {hinweisButton && hinweisHref && (
+          hinweisIstDatei
+            ? <a class="hinweis__btn" href={hinweisHref} download>{hinweisButton}</a>
+            : <a class="hinweis__btn" href={hinweisHref} target="_blank" rel="noopener">{hinweisButton}</a>
+        )}
       </div>
     </section>
   )}
