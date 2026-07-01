@@ -1,5 +1,5 @@
 {
-  "aktiv": false,
-  "titel": "",
-  "text": ""
+  "aktiv": true,
+  "titel": "Test",
+  "text": "test"
 }
